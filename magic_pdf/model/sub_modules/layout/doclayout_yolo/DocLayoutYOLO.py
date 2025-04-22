@@ -1,7 +1,8 @@
 from doclayout_yolo import YOLOv10
 from tqdm import tqdm
 import torch
-
+from loguru import logger
+from magic_pdf.libs.performance_stats import measure_time
 
 class DocLayoutYOLOModel(object):
     def __init__(self, weight, device):
@@ -10,6 +11,7 @@ class DocLayoutYOLOModel(object):
         if self.device.type == "mps":
             logger.info("Using MPS device for DocLayoutYOLOModel")
 
+    @measure_time
     def predict(self, image):
         layout_res = []
         doclayout_yolo_res = self.model.predict(
@@ -33,6 +35,7 @@ class DocLayoutYOLOModel(object):
             layout_res.append(new_item)
         return layout_res
 
+    @measure_time
     def batch_predict(self, images: list, batch_size: int) -> list:
         images_layout_res = []
         for index in tqdm(range(0, len(images), batch_size), desc="Layout Predict"):

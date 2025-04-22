@@ -22,6 +22,7 @@ from magic_pdf.libs.config_reader import (get_device, get_formula_config,
                                           get_local_models_dir,
                                           get_table_recog_config)
 from magic_pdf.model.model_list import MODEL
+from magic_pdf.libs.performance_stats import PerformanceStats, measure_time
 
 class ModelSingleton:
     _instance = None
@@ -120,6 +121,7 @@ def custom_model_init(
 
     return custom_model
 
+@measure_time
 def doc_analyze(
     dataset: Dataset,
     ocr: bool = False,
@@ -177,6 +179,7 @@ def doc_analyze(
     from magic_pdf.operators.models import InferenceResult
     return InferenceResult(model_json, dataset)
 
+@measure_time
 def batch_doc_analyze(
     datasets: list[Dataset],
     parse_method: str = 'auto',
@@ -236,6 +239,7 @@ def batch_doc_analyze(
     return infer_results
 
 
+@measure_time
 def may_batch_image_analyze(
         images_with_extra_info: list[(np.ndarray, bool, str)],
         ocr: bool,

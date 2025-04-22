@@ -18,14 +18,15 @@ from detectron2.modeling.postprocessing import detector_postprocess
 from detectron2.modeling.roi_heads.fast_rcnn import fast_rcnn_inference_single_image
 from contextlib import contextmanager
 from itertools import count
+from magic_pdf.libs.performance_stats import measure_time
 
 @META_ARCH_REGISTRY.register()
 class VLGeneralizedRCNN(GeneralizedRCNN):
     """
     Generalized R-CNN. Any models that contains the following three components:
-    1. Per-image feature extraction (aka backbone)
-    2. Region proposal generation
-    3. Per-region feature extraction and prediction
+     1. Per-image feature extraction (aka backbone)
+     2. Region proposal generation
+     3. Per-region feature extraction and prediction
     """
 
     def __init__(self, cfg):
@@ -34,6 +35,7 @@ class VLGeneralizedRCNN(GeneralizedRCNN):
         if self.device.type == "mps":
             print("Using MPS device for VLGeneralizedRCNN")
 
+    @measure_time
     def forward(self, batched_inputs: List[Dict[str, torch.Tensor]]):
         """
         Args:
@@ -88,6 +90,7 @@ class VLGeneralizedRCNN(GeneralizedRCNN):
         losses.update(proposal_losses)
         return losses
 
+    @measure_time
     def inference(
         self,
         batched_inputs: List[Dict[str, torch.Tensor]],

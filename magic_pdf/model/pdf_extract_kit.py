@@ -16,6 +16,7 @@ from magic_pdf.model.sub_modules.model_utils import (
     clean_vram, crop_img, get_res_list_from_layout_res)
 from magic_pdf.model.sub_modules.ocr.paddleocr2pytorch.ocr_utils import (
     get_adjusted_mfdetrec_res, get_ocr_result_list)
+from magic_pdf.libs.performance_stats import PerformanceStats, measure_time
 
 
 class CustomPEKModel:
@@ -168,6 +169,7 @@ class CustomPEKModel:
 
         logger.info('DocAnalysis init done!')
 
+    @measure_time
     def __call__(self, image):
         # layout检测
         layout_start = time.time()

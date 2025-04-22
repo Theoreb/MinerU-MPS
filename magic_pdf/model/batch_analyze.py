@@ -10,6 +10,7 @@ from magic_pdf.model.sub_modules.model_utils import (
     clean_vram, crop_img, get_res_list_from_layout_res)
 from magic_pdf.model.sub_modules.ocr.paddleocr2pytorch.ocr_utils import (
     get_adjusted_mfdetrec_res, get_ocr_result_list)
+from magic_pdf.libs.performance_stats import PerformanceStats, measure_time
 
 YOLO_LAYOUT_BASE_BATCH_SIZE = 1
 MFD_BASE_BATCH_SIZE = 1
@@ -30,6 +31,7 @@ class BatchAnalyze:
         if self.device.type == "mps":
             logger.info("Using MPS device for BatchAnalyze")
 
+    @measure_time
     def __call__(self, images_with_extra_info: list) -> list:
         if len(images_with_extra_info) == 0:
             return []
@@ -253,6 +255,7 @@ class BatchAnalyze:
             rec_time += time.time() - rec_start
             # logger.info(f'ocr-rec time: {round(rec_time, 2)}, total images processed: {total_processed}')
 
-
+        # Clean memory after processing
+        clean_memory(self.device)
 
         return images_layout_res

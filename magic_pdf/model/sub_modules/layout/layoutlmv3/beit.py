@@ -28,6 +28,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.checkpoint as checkpoint
 from timm.models.layers import drop_path, to_2tuple, trunc_normal_
+from magic_pdf.libs.performance_stats import measure_time
 
 
 def _cfg(url='', **kwargs):
@@ -566,6 +567,7 @@ class BEiT(nn.Module):
     def no_weight_decay(self):
         return {'pos_embed', 'cls_token'}
 
+    @measure_time
     def forward_features(self, x):
         B, C, H, W = x.shape
         x, (Hp, Wp) = self.patch_embed(x, self.pos_embed[:, 1:, :] if self.pos_embed is not None else None)
