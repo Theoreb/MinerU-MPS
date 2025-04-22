@@ -79,6 +79,11 @@ class CustomPEKModel:
         # 初始化解析方案
         self.device = kwargs.get('device', 'cpu')
 
+        # MPS-specific optimizations
+        self.device = torch.device("mps") if torch.backends.mps.is_available() else torch.device(self.device)
+        if self.device.type == "mps":
+            logger.info("Using MPS device for CustomPEKModel")
+
         logger.info('using device: {}'.format(self.device))
         models_dir = kwargs.get(
             'models_dir', os.path.join(root_dir, 'resources', 'models')

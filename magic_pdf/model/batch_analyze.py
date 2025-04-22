@@ -2,6 +2,7 @@ import time
 import cv2
 from loguru import logger
 from tqdm import tqdm
+import torch
 
 from magic_pdf.config.constants import MODEL_NAME
 from magic_pdf.model.sub_modules.model_init import AtomModelSingleton

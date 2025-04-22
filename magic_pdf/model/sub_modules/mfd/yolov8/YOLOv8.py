@@ -1,6 +1,7 @@
 from tqdm import tqdm
 from ultralytics import YOLO
-
+import torch
+from loguru import logger
 
 class YOLOv8MFDModel(object):
     def __init__(self, weight, device="cpu"):
