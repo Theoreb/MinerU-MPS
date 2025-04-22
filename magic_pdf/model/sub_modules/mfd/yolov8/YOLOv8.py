@@ -5,7 +5,9 @@ from ultralytics import YOLO
 class YOLOv8MFDModel(object):
     def __init__(self, weight, device="cpu"):
         self.mfd_model = YOLO(weight)
-        self.device = device
+        self.device = torch.device("mps") if torch.backends.mps.is_available() else torch.device(device)
+        if self.device.type == "mps":
+            logger.info("Using MPS device for YOLOv8MFDModel")
 
     def predict(self, image):
         mfd_res = self.mfd_model.predict(
@@ -15,7 +17,6 @@ class YOLOv8MFDModel(object):
 
     def batch_predict(self, images: list, batch_size: int) -> list:
         images_mfd_res = []
-        # for index in range(0, len(images), batch_size):
         for index in tqdm(range(0, len(images), batch_size), desc="MFD Predict"):
             mfd_res = [
                 image_res.cpu()

@@ -24,6 +24,11 @@ class BatchAnalyze:
         self.formula_enable = formula_enable
         self.table_enable = table_enable
 
+        # MPS-specific optimizations
+        self.device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+        if self.device.type == "mps":
+            logger.info("Using MPS device for BatchAnalyze")
+
     def __call__(self, images_with_extra_info: list) -> list:
         if len(images_with_extra_info) == 0:
             return []

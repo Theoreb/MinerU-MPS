@@ -278,6 +278,9 @@ def may_batch_image_analyze(
             batch_ratio = 1
             logger.info(f'Could not determine GPU memory, using default batch_ratio: {batch_ratio}')
 
+    if str(device).startswith('mps'):
+        batch_ratio = 2  # Adjust batch ratio for MPS
+        logger.info(f'Using MPS device, batch_ratio: {batch_ratio}')
 
     # doc_analyze_start = time.time()
 

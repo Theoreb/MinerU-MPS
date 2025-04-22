@@ -503,6 +503,11 @@ class BEiT(nn.Module):
         self.apply(self._init_weights)
         self.fix_init_weight()
 
+        # MPS-specific optimizations
+        self.device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+        if self.device.type == "mps":
+            print("Using MPS device for BEiT")
+
     def fix_init_weight(self):
         def rescale(param, layer_id):
             param.div_(math.sqrt(2.0 * layer_id))

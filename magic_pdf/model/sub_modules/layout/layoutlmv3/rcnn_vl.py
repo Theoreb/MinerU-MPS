@@ -28,6 +28,12 @@ class VLGeneralizedRCNN(GeneralizedRCNN):
     3. Per-region feature extraction and prediction
     """
 
+    def __init__(self, cfg):
+        super().__init__(cfg)
+        self.device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+        if self.device.type == "mps":
+            print("Using MPS device for VLGeneralizedRCNN")
+
     def forward(self, batched_inputs: List[Dict[str, torch.Tensor]]):
         """
         Args:

@@ -1,11 +1,14 @@
 from doclayout_yolo import YOLOv10
 from tqdm import tqdm
+import torch
 
 
 class DocLayoutYOLOModel(object):
     def __init__(self, weight, device):
         self.model = YOLOv10(weight)
-        self.device = device
+        self.device = torch.device("mps") if torch.backends.mps.is_available() else torch.device(device)
+        if self.device.type == "mps":
+            logger.info("Using MPS device for DocLayoutYOLOModel")
 
     def predict(self, image):
         layout_res = []
@@ -32,7 +35,6 @@ class DocLayoutYOLOModel(object):
 
     def batch_predict(self, images: list, batch_size: int) -> list:
         images_layout_res = []
-        # for index in range(0, len(images), batch_size):
         for index in tqdm(range(0, len(images), batch_size), desc="Layout Predict"):
             doclayout_yolo_res = [
                 image_res.cpu()
